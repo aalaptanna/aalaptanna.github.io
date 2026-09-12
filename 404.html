@@ -215,6 +215,75 @@
     .ch .dot{left:-32px}
     .chapters:before{left:5px}
   }
+
+/* ============ mobile optimisation ============ */
+/* .page sets side gutters, but .mast/.hero/.shead/.close/.filmwrap/.top each
+   re-declare `padding` with the shorthand, which zeroes the horizontal value.
+   Restore gutters explicitly via one variable. */
+:root{ --gut:28px }
+.page,
+.page.top,.page.mast,.page.hero,.page.shead,.page.close,
+.page.filmwrap,.page.tools{
+  padding-left:var(--gut);
+  padding-right:var(--gut);
+}
+@supports (padding:max(0px)){
+  .page,
+  .page.top,.page.mast,.page.hero,.page.shead,.page.close,
+  .page.filmwrap,.page.tools{
+    padding-left:max(var(--gut),env(safe-area-inset-left));
+    padding-right:max(var(--gut),env(safe-area-inset-right));
+  }
+}
+
+/* never allow sideways scroll, and let long links wrap */
+body{ overflow-x:hidden }
+img,svg,video{ max-width:100%; height:auto }
+a,.mmeta,.mfoot{ overflow-wrap:break-word }
+
+/* sticky section nav on touch sizes: the page is long, and the nav
+   otherwise only exists at the very top */
+@media (max-width:900px){
+  .page.top{
+    position:sticky; top:0; z-index:60;
+    padding-top:11px; padding-bottom:10px;
+    background:var(--paper);
+    border-bottom:1px solid var(--hair);
+  }
+  .page.top nav{
+    display:flex; gap:22px;
+    overflow-x:auto;
+    scrollbar-width:none; -ms-overflow-style:none;
+    -webkit-overflow-scrolling:touch;
+  }
+  .page.top nav::-webkit-scrollbar{ display:none }
+  .page.top nav button{ flex:0 0 auto; padding:6px 0; font-size:15px }
+}
+
+/* tighten the vertical rhythm: clamp minimums were tuned for desktop
+   and leave large dead gaps on a phone */
+@media (max-width:640px){
+  :root{ --gut:26px }
+  .page.mast{ padding-top:30px; padding-bottom:34px }
+  .page.hero{ padding-top:46px; padding-bottom:34px }
+  .page.shead{ padding-top:36px; padding-bottom:16px }
+  .page.close{ padding-top:48px; padding-bottom:60px }
+  .page.filmwrap{ padding-top:28px; padding-bottom:28px }
+  .mast h1{ margin-top:20px; font-size:clamp(1.5rem,6.2vw,2rem); line-height:1.2 }
+  .rot{ margin-top:20px }
+  .figs{ gap:20px }
+  .mmeta{ padding-bottom:26px }
+  .ch>button,.row>button{ padding-right:24px }
+  .mfoot{ flex-direction:column; gap:10px }
+  .ainote{ padding-left:16px }
+}
+
+@media (max-width:380px){
+  :root{ --gut:20px }
+  .page.top nav{ gap:17px }
+  .page.top nav button{ font-size:14px }
+}
+
 </style>
 <style>
 .ha-img-placeholder{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:#f4f4f5;border:1px dashed #d4d4d8;border-radius:8px;color:#71717a;font-size:12px;font-family:system-ui,sans-serif;min-height:80px;padding:16px;box-sizing:border-box;animation:ha-img-pulse 1.5s ease-in-out infinite}
